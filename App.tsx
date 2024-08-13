@@ -1,15 +1,27 @@
+// App.tsx
 import React from 'react';
-import {Provider} from 'react-redux';
-import {PersistGate} from 'redux-persist/integration/react';
-import {store, persistor} from './src/store';
-import TodoApp from './src/components/TodoApp';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import LandingScreen from './src/screens/LandingScreen';
+import TriviaScreen from './src/screens/TriviaScreen';
+import ResultScreen from './src/screens/ResultScreen';
 
-const App: React.FC = () => (
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <TodoApp />
-    </PersistGate>
-  </Provider>
-);
+export type RootStackParamList = {
+  Landing: undefined;
+  Trivia: undefined;
+  Result: {score: number};
+};
 
-export default App;
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Landing">
+        <Stack.Screen name="Landing" component={LandingScreen} />
+        <Stack.Screen name="Trivia" component={TriviaScreen} />
+        <Stack.Screen name="Result" component={ResultScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}

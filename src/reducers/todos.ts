@@ -1,3 +1,4 @@
+import {Alert} from 'react-native';
 import {ADD_TODO, REMOVE_TODO, TodoActionTypes} from '../actions';
 
 interface Todo {
@@ -20,9 +21,13 @@ const todosReducer = (
 ): TodosState => {
   switch (action.type) {
     case ADD_TODO:
+      let response = state.todos.find(item => item.text == action.payload.text);
+      if (response) {
+        Alert.alert('Item already exists');
+      }
       return {
         ...state,
-        todos: [...state.todos, action.payload],
+        todos: response ? state.todos : [...state.todos, action.payload],
       };
     case REMOVE_TODO:
       return {
