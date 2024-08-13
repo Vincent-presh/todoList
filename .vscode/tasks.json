@@ -1,0 +1,26 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "android",
+      "problemMatcher": [],
+      "label": "npm: android",
+      "detail": "react-native run-android"
+    },
+    {
+      "type": "npm",
+      "script": "buildBundle",
+      "problemMatcher": [],
+      "label": "Build Release for Android",
+      "detail": "cd android && ./gradlew bundleRelease"
+    },
+    {
+      "type": "npm",
+      "script": "buildApk",
+      "problemMatcher": [],
+      "label": "Assemble Release for Android",
+      "detail": "cd android && ./gradlew assembleRelease"
+    }
+  ]
+}

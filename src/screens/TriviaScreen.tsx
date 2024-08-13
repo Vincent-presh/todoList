@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../App';
@@ -7,8 +7,10 @@ import Animated, {
   SlideInLeft,
   SlideOutRight,
   useSharedValue,
-  withSpring,
   useAnimatedStyle,
+  withSpring,
+  withSequence,
+  withTiming,
 } from 'react-native-reanimated';
 
 type TriviaScreenNavigationProp = NativeStackNavigationProp<
@@ -36,7 +38,7 @@ export default function TriviaScreen({navigation}: Props) {
   const [score, setScore] = useState<number>(0);
   const [timer, setTimer] = useState<number>(10);
 
-  // Shake animation
+  // Shake animation value
   const shakeAnim = useSharedValue(0);
 
   useEffect(() => {
@@ -70,9 +72,14 @@ export default function TriviaScreen({navigation}: Props) {
     if (answer === questions[currentQuestion].correct_answer) {
       setScore(prevScore => prevScore + 1);
     } else {
-      shakeAnim.value = withSpring(10, {damping: 2, stiffness: 2000}, () => {
-        shakeAnim.value = withSpring(0); // Reset the shake animation
-      });
+      // Trigger the shake animation with a sequence of movements
+      shakeAnim.value = withSequence(
+        withTiming(-10, {duration: 50}),
+        withTiming(10, {duration: 50}),
+        withTiming(-10, {duration: 50}),
+        withTiming(10, {duration: 50}),
+        withTiming(0, {duration: 50}), // Return to the original position
+      );
     }
   };
 
@@ -88,7 +95,7 @@ export default function TriviaScreen({navigation}: Props) {
 
   const getButtonStyle = (answer: string) => {
     if (!selectedAnswer) {
-      return 'bg-gray-400';
+      return 'bg-gray-300';
     }
 
     if (answer === questions[currentQuestion].correct_answer) {
@@ -99,7 +106,7 @@ export default function TriviaScreen({navigation}: Props) {
       return 'bg-red-500';
     }
 
-    return 'bg-gray-400';
+    return 'bg-gray-300';
   };
 
   const animatedStyle = useAnimatedStyle(() => {
